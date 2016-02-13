@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Diseases by Region</title>
+	<script src="http:/d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="tzcss.css" />
+</head>
+
+<body>
+	<div id="tooltipcontainer">
+		<div id="tooltipmargin">
+			<div id="tooltip" class="tooltip">
+				<p id="neighborhood_name">placeholder</p>
+			</div>
+			<div id="tooltipline" class="tooltip"></div>
+			<div id="tooltipcircle" class="tooltip"></div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="title-container">
+			<a id="logo" href="">
+				<img src="tz_logo.png" style="width: 70px">
+			</a>
+			<div class="title-text">
+				<a href="http://youarehere.cc/#/maps/by-city/cambridge" id="mapClass">
+					<h3 class="title" style="font-size: 36px; color:#545454"> Diseases by region </h3>
+				</a>
+				<div class="subtitle">
+					This visualization maps death by diseases in regional perspectives.
+					<a id="showMore" href="#"> ... more </a>
+				</div>
+			</div>
+			<div class="spacer"></div>
+		</div>
+		<div id="colorpallete">
+			<div class="palleteitem">
+				<div id="Smalaria" class="pallete"></div> Severe Malaria</div>
+			<div class="palleteitem">
+				<div id="Umalaria" class="pallete"></div> Uncomplicated Malaria </div>
+			<div class="palleteitem">
+				<div id="Fractures" class="pallete"></div> Fractures </div>
+			<div class="palleteitem">
+				<div id="Tuberculosis" class="pallete"></div> Tuberculosis </div>
+			<div class="palleteitem">
+				<div id="Anaemia" class="pallete"></div> Anaemia </div>
+			<div class="palleteitem">
+				<div id="Diabetes" class="pallete"></div> Diabetes </div>
+			<div class="palleteitem">
+				<div id="HIV" class="pallete"></div> HIV / AIDS</div>
+		</div>
+		<script type="text/javascript">
+			function extend(obj, src) {
+				for (var key in src) {
+					if (src.hasOwnProperty(key)) obj[key] = src[key];
+				}
+				return obj;
+			}
+
+			function returnDis(id_) {
+				if (id_ == "SMalaria") {
+					dis = '"Malaria- Severe, Complicated"';
+				} else if (id_ == "SMalaria") {
+					dis = "Malaria- Uncomplicated";
+				} else if (id_ == "Fractures") {
+					dis = "Fractures/Dislocation";
+				} else if (id_ == "Diabetes") {
+					dis = "Diabetes Mellitus"
+				} else if (id_ == "HIV") {
+					dis = "HIV/AIDS"
+				} else {
+					dis = id_;
+				}
+			}
+
+
+			/*
+
+			Malaria - severe
+			Malaria - uncomplicated
+			Fracture
+			Tuberculosis
+			Anaemia
+			Diabetes
+			HIV/AIDS
+
+			*/
+
+			var prop;
+			var dis;
+			var id_;
+			var color_Smalaria = "#ff1744";
+			var color_Umalaria = "#e53935";
+			var color_Fractures = "#d81b60";
+			var color_Tuberculosis = "#0099cc";
+			var color_Anaemia = "#DC7937";
+			var color_Diabetes = "#4785C8";
+			var color_HIV = "blue";
+
+			var num_Smalaria = 430;
+			var num_Umalaria = 259;
+			var num_Fractures = 241;
+			var num_Tuberculosis = 271;
+			var num_Anaemia = 297;
+			var num_Diabetes = 112;
+			var num_HIV = 1717;
+
+			//Width and height
+			var w = window.innerWidth - 100;
+			var h = window.innerHeight - 10;
+			//Define map projection
+			var projection = d3.geo.mercator()
+				.center([32.8540, -4.7070])
+				.scale([3000]);
+
+			var default_stroke = "#666666"
+			var highlight_stroke = "white"
+			var default_state = "#333333"
+			var highlight_state = "#404040"
+
+
+			//Define path generator
+			var path = d3.geo.path()
+				.projection(projection);
+
+			//Create SVG element
+			var svg = d3.select("body")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h)
+
+			//Load in GeoJSON data
+			d3.json("gb-all.geo.json", function(r) {
+				d3.csv("diseases.csv", function(diseases) {
+
+					svg.selectAll("path")
+						.data(r.features)
+						.enter()
+						.append("path")
+						.attr("d", path).style('fill', default_state).style('stroke', default_stroke).style('stroke-width', function(d) {
+
+
+							for (var i = 0; i < diseases.length; i++) {
+								if (diseases[i].Region == d.properties.NAME_1) {
+									d.properties = extend(d.properties, diseases[i])
+								}
+							}
+
+							return 1;
+						})
+						.on("mouseenter", function(d) {
+							d3.select(this).style('stroke', highlight_stroke).style('stroke-width', 2)
+							var xPosition = parseFloat(path.centroid(d)[0] - 80);
+							var yPosition = parseFloat(path.centroid(d)[1]) + 15;
+							d3.select("#tooltipcontainer")
+								.style("left", xPosition + "px")
+								.style("top", yPosition + "px");
+							d3.select("#neighborhood_name").text(d.properties.NAME_1);
+							d3.selectAll(".tooltip").classed("hidden", false);
+						}).on("mouseout", function(d) {
+							returnDis(id_)
+							d3.selectAll(".tooltip").classed("hidden", true);
+							if(default_state != "#333333"){
+							d3.select(this).transition().duration(200).style('stroke-width', 1).style('stroke', default_stroke).style('fill', d3.rgb(default_state).darker(5 - d.properties[dis] * prop))
+						}
+						else {
+							d3.select(this).transition().duration(200).style('stroke-width', 1).style('stroke', default_stroke).style('fill', default_state)
+						}
+						})
+
+				})
+			});
+
+
+			d3.selectAll(".pallete").on("click", function(d) {
+				id_ = d3.select(this).attr("id");
+				var color = "color_" + id_;
+				color = eval(color);
+				default_state = color;
+				prop = 10 / eval("num_" + id_);
+				returnDis(id_)
+
+				d3.selectAll("path").transition().style("fill", function(d) {
+					return d3.rgb(color).darker(5 - d.properties[dis] * prop);
+				}).style("opacity", 0.5);
+			})
+		</script>
+</body>
+
+</html>

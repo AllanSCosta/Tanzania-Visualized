@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Mass Media Exposure</title>
+	<!-- load D3js -->
+	<script src="http://www.d3plus.org/js/d3.js"></script>
+
+	<!-- load D3plus after D3js -->
+	<script src="http://www.d3plus.org/js/d3plus.js"></script>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="tzcss.css" />
+</head>
+
+<body>
+
+	<div class="container">
+		<div id="viz"></div>
+		<div class="title-container">
+			<a id="logo" href="">
+				<img src="tz_logo.png" style="width: 70px">
+			</a>
+			<div class="title-text">
+				<a href="http://youarehere.cc/#/maps/by-city/cambridge" id="mapClass">
+					<h3 class="title" style="font-size: 36px; color:#545454"> Mass Media Exposure </h3>
+				</a>
+				<div class="subtitle">
+					This visualization reveals exposure to Mass Media in Tanzania
+					<a id="showMore" href="#"> ... more </a>
+				</div>
+			</div>
+			<div class="spacer"></div>
+		</div>
+
+
+
+
+		<div id="colorpallete">
+			<div class="palleteitem">
+				<div class="pallete pallete_white" id="Newspaper" ></div> NEWSPAPER </div>
+			<div class="palleteitem">
+				<div class="pallete pallete_gray"  id="Television" ></div> TELEVISION  </div>
+			<div class="palleteitem">
+				<div class="pallete pallete_gray" id="Radio" ></div> RADIO </div>
+			<div class="palleteitem">
+				<div class="palleteitem">
+					<div class="pallete pallete_gray" id="All" ></div> ALL </div>
+				<div class="palleteitem">
+					<div class="palleteitem">
+						<div class="pallete pallete_gray" id="None" ></div> NONE </div>
+					<div class="palleteitem">
+		</div>
+
+
+
+
+		<script type="text/javascript">
+		var sample_data = [];
+
+		d3.csv("massmedia.csv", function(csv){
+
+			var filter_ = "Newspaper";
+
+			for (var i = 0; i< csv.length; i++){
+				sample_data.push({"name":csv[i]["region"], "Newspaper": parseInt(csv[i]["Newspaper"]), "Radio": parseInt(csv[i]["Radio"]),"Television": parseInt(csv[i]["Television"]), "All": parseInt(csv[i]["All"]), "None": parseInt(csv[i]["No"])})
+
+				if(i == csv.length-1){
+				drawVisualization(filter_)
+				}
+
+				}
+				})
+
+
+
+				d3.selectAll(".pallete").on("click", function(d){
+					d3.selectAll(".pallete").attr("class", "pallete pallete_gray")
+					d3.select(this).attr("class", "pallete pallete_white")
+					filter_ = d3.select(this).attr("id");
+					drawVisualization(filter_);
+				})
+
+
+					function drawVisualization(filter_){
+									var visualization = d3plus.viz()
+										.container("#viz") // container DIV to hold the visualization
+										.data(sample_data) // data to use with the visualization
+										.type("tree_map") // visualization type
+										.id("name") // key for which our data is unique on
+										.size(filter_)
+										.color(filter_)
+										.background("#181818")
+										.labels({"align": "left", "valign": "top"})
+										.font("Century Gothic")
+								 .height(700) .draw() }
+
+		</script>
+</body>
+
+</html>

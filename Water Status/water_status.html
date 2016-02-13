@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Water by Region</title>
+	<!-- load D3js -->
+	<script src="http://www.d3plus.org/js/d3.js"></script>
+
+	<!-- load D3plus after D3js -->
+	<script src="http://www.d3plus.org/js/d3plus.js"></script>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="tzcss.css" />
+</head>
+
+<body>
+
+	<div class="container">
+		<div id="viz"></div>
+		<div class="title-container">
+			<a id="logo" href="">
+				<img src="tz_logo.png" style="width: 70px">
+			</a>
+			<div class="title-text">
+				<a href="http://youarehere.cc/#/maps/by-city/cambridge" id="mapClass">
+					<h3 class="title" style="font-size: 36px; color:#545454"> Water by Region </h3>
+				</a>
+				<div class="subtitle">
+					This visualization reveals water availability in Tanzanian regions.
+					<a id="showMore" href="#"> ... more </a>
+				</div>
+			</div>
+			<div class="spacer"></div>
+		</div>
+
+
+
+
+		<div id="colorpallete">
+			<div class="palleteitem">
+				<div class="pallete" id="Total" style="background-color: white "></div> TOTAL </div>
+			<div class="palleteitem">
+				<div class="pallete" id="Waterfonts" style="background-color: #5B8BD3"></div> FUNCTIONAL  </div>
+			<div class="palleteitem">
+				<div class="pallete" id="DWaterfonts" style="background-color: #BB3F5A"></div> NON FUNCTIONAL </div>
+			<div class="palleteitem">
+		</div>
+
+
+
+
+
+		<script type="text/javascript">
+		var sample_data = [];
+
+		d3.csv("Waterfont.csv", function(csv){
+
+			var filter_ = "Total";
+
+			for (var i = 0; i< csv.length; i++){
+				sample_data.push({"name":csv[i]["REGION"], "Waterfonts": parseInt(csv[i]["FUNCTIONAL"]), "DWaterfonts": parseInt(csv[i]["NONFUNCTIONAL"]), "Total": parseInt(csv[i]["TOTALNUMBER"])})
+
+				if(i == csv.length-1){
+				drawVisualization(filter_)
+				}
+
+				}
+				})
+
+
+
+				d3.selectAll(".pallete").on("click", function(d){
+					filter_ = d3.select(this).attr("id");
+					drawVisualization(filter_);
+				})
+
+
+					function drawVisualization(filter_){
+									var visualization = d3plus.viz()
+										.container("#viz") // container DIV to hold the visualization
+										.data(sample_data) // data to use with the visualization
+										.type("tree_map") // visualization type
+										.id("name") // key for which our data is unique on
+										.size(filter_)
+										.color(filter_)
+										.background("#181818")
+										.labels({"align": "left", "valign": "top"})
+										.font("Century Gothic")
+								 .height(700) .draw() }
+
+		</script>
+</body>
+
+</html>

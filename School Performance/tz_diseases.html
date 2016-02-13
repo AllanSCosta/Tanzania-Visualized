@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Regional School Performance</title>
+	<script src="http:/d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="tzcss.css" />
+</head>
+
+<body>
+	<div id="tooltipcontainer">
+		<div id="tooltipmargin">
+			<div id="tooltip" class="tooltip">
+				<p id="neighborhood_name">placeholder</p>
+			</div>
+			<div id="tooltipline" class="tooltip"></div>
+			<div id="tooltipcircle" class="tooltip"></div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="title-container">
+			<a id="logo" href="">
+				<img src="tz_logo.png" style="width: 70px">
+			</a>
+			<div class="title-text">
+				<a href="http://youarehere.cc/#/maps/by-city/cambridge" id="mapClass">
+					<h3 class="title" style="font-size: 36px; color:#545454"> Regional School Performance </h3>
+				</a>
+				<div class="subtitle">
+					This organogram compares school performance in the regional stage of Tanzania.
+					<a id="showMore" href="#"> ... more </a>
+				</div>
+			</div>
+			<div class="spacer"></div>
+		</div>
+
+		<script type="text/javascript">
+			function extend(obj, src) {
+				for (var key in src) {
+					if (src.hasOwnProperty(key)) obj[key] = src[key];
+				}
+				return obj;
+			}
+
+			function returnDis(id_) {
+				if (id_ == "SMalaria") {
+					dis = '"Malaria- Severe, Complicated"';
+				} else if (id_ == "SMalaria") {
+					dis = "Malaria- Uncomplicated";
+				} else if (id_ == "Fractures") {
+					dis = "Fractures/Dislocation";
+				} else if (id_ == "Diabetes") {
+					dis = "Diabetes Mellitus"
+				} else if (id_ == "HIV") {
+					dis = "HIV/AIDS"
+				} else {
+					dis = id_;
+				}
+			}
+
+
+
+			var color_Smalaria = "#ff1744";
+			var color_Umalaria = "#e53935";
+			var color_Fractures = "#d81b60";
+			var color_Tuberculosis = "#0099cc";
+			var color_Anaemia = "#DC7937";
+			var color_Diabetes = "#4785C8";
+			var color_HIV = "blue";
+
+			var num_Smalaria = 430;
+			var num_Umalaria = 259;
+			var num_Fractures = 241;
+			var num_Tuberculosis = 271;
+			var num_Anaemia = 297;
+			var num_Diabetes = 112;
+			var num_HIV = 1717;
+
+			//Width and height
+			var w = window.innerWidth - 100;
+			var h = window.innerHeight - 10;
+			//Define map projection
+			var projection = d3.geo.mercator()
+				.center([31.8540, -4.7070])
+				.scale([3700]);
+
+			var default_stroke = "#666666"
+			var highlight_stroke = "white"
+			var default_state = "#00b386"
+			var highlight_state = "#404040"
+
+
+			//Define path generator
+			var path = d3.geo.path()
+				.projection(projection);
+
+			//Create SVG element
+			var svg = d3.select("body")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h)
+
+			//Load in GeoJSON data
+			d3.json("gb-all.geo.json", function(r) {
+				d3.csv("perf.csv", function(perf) {
+
+					svg.selectAll("path")
+						.data(r.features)
+						.enter()
+						.append("path")
+						.attr("d", path).style('stroke', default_stroke).style('stroke-width', function(d) {
+							for (var i = 0; i < perf.length; i++) {
+								if (perf[i]["REGION"] == d.properties.NAME_1.toUpperCase()) {
+									d.properties = extend(d.properties, perf[i])
+								}
+							}
+							console.log(d.properties)
+							return 1;
+						}).style('fill', function(d){
+						return d3.rgb(default_state).darker(10-d.properties["PERCENTAGEPASS"]*10/77)})
+						.on("mouseenter", function(d) {
+							d3.select(this).style('stroke', highlight_stroke).style('stroke-width', 2)
+							var xPosition = parseFloat(path.centroid(d)[0] - 80);
+							var yPosition = parseFloat(path.centroid(d)[1]) + 15;
+							d3.select("#tooltipcontainer")
+								.style("left", xPosition + "px")
+								.style("top", yPosition + "px");
+							d3.select("#neighborhood_name").text(d.properties.NAME_1.toUpperCase() + ": " + d.properties["PERCENTAGEPASS"] + "%");
+							d3.selectAll(".tooltip").classed("hidden", false);
+						}).on("mouseout", function(d) {
+							d3.selectAll(".tooltip").classed("hidden", true);
+
+							d3.select(this).transition().duration(200).style('stroke-width', 1).style('stroke', default_stroke).style('fill', d3.rgb(default_state).darker(10-d.properties["PERCENTAGEPASS"]*10/77))
+
+
+						})
+
+				})
+			});
+
+
+		</script>
+</body>
+
+</html>

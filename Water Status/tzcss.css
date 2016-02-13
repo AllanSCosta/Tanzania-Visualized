@@ -1,0 +1,180 @@
+.container {
+  top: -30px;
+    background-color: #181818;
+}
+#tooltipcontainer {
+  position: absolute;
+  width: 130px;
+  margin-top: 60px;
+  margin-left: 30px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  pointer-events: none;
+  text-align: center;
+}
+#tooltip {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.7);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  pointer-events: none;
+  text-align: center;
+}
+.hidden {
+  display: none !important;
+}
+#tooltip p {
+  margin: 0;
+  font-family: century gothic;
+  color: white !important;
+  font-size: 11.4px;
+  position: relative;
+}
+
+#tooltipmargin {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+#tooltipline {
+  height: 5px;
+  width: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  border: solid 1px black;
+}
+#tooltipcircle {
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  border: solid 2px black;
+  background-color: black;
+  margin-right: auto;
+  margin-left: auto;
+    background-color: #181818;
+}
+	.title-text{
+    font-family: "Century Gothic",serif;
+    font-size: 16px;
+    color: #808080;
+    display:inline;
+    margin-left: 15px;
+    margin-top:40px;
+      background-color: #181818;
+
+  }
+  .title{
+    font-family: Century Gothic;
+    line-height: 1.1;
+    font-size: 36px;
+    color: #545454;
+    margin-top: 0px;
+    margin-bottom: 1px;
+    font-weight: 100 !important;
+      background-color: #181818;
+  }
+
+  a{
+    text-decoration: none;
+  }
+.container {
+  background-color: #181818;
+  position: relative;
+  margin-top: 60px;
+  background: #181818 none repeat scroll 0% 0%;
+  width: 1175px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#showMore{
+  color: #0086b3;
+}
+element {
+  width: 50px;
+}
+img {
+  vertical-align: middle;
+}
+img {
+  border: 0px none;
+}
+.title-container #logo, .title-container .title-text {
+  float: left;
+    background-color: #181818;
+}
+#logo {
+  display: inline;
+  position: relative;
+  top: 45px;
+}
+svg {
+  fill: black;
+}
+html{
+  background-color:#181818 ;
+}
+#viz{
+  background-color:#181818 ;
+
+}
+#pallete_name_container {
+
+}
+.palleteitem{
+  display:inline !important;
+  margin-right: 20px;
+  color: #a6a6a6;
+  font-family: century gothic;
+  font-size: 18px;
+  text-align: center;
+  max-width: 200px;
+}
+#pallete_filter {
+  color: #a6a6a6;
+  font-family: century gothic;
+  position: absolute;
+  top: -60px;
+  left: -20px;
+  width: 150px;
+  font-size: 19px;
+  overflow: visible;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pallete_gray {
+  background-color: gray !important;
+}
+
+.pallete_white {
+  background-color: white !important;
+  opacity: 0.7;
+}
+.pallete {
+
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  display:inline-block; !important;
+  top: 21px;
+  left: -24px;
+
+  cursor: pointer;
+}
+#colorpallete {
+  position: absolute;
+  font-family: century gothic;
+  color: gray;
+  top: 770px;
+  left: 730px;
+  margin-bottom: 10px;
+  z-index: 2000;
+  display:inline !important;
+  width: 500px;
+}
